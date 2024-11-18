@@ -3,26 +3,29 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Note, Notebook
 from taggit.models import Tag
 from django.views.generic import ListView, DetailView
+from django.http import HttpResponse
+
+def landing_page(request):
+    return render(request, 'notes/landing_page.html')
 
 class NotebookListView(ListView):
     model = Notebook
     context_object_name = 'notebook'
     template_name = 'notes/notebook_list.html'
 
-class NoteListView(ListView):
-    model = Note
-    context_object_name = 'notes'
-    template_name = 'notes/note_list.html'
-    
-    def get_queryset(self):
-        self.notebook = get_object_or_404(Notebook, pk=self.kwargs['pk'])
-        queryset = Note.objects.filter(notebook=self.notebook)
-        return queryset
+def note_list_view(request, pk=None):
+    if pk:
+        notebook = get_object_or_404(Notebook, pk=pk)
+        notes = Note.objects.filter(notebook=notebook).order_by('-modified')
+    else:
+        notebook = None
+        notes = Note.objects.all().order_by('-modified')
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['notebook'] = self.notebook
-        return context
+    context = {
+        'notes': notes,
+        'notebook': notebook,
+    }
+    return render(request, 'notes/note_list.html', context)
     
 def note_detail(request, pk, tag_slug=None):
     note = get_object_or_404(Note, pk=pk)
@@ -32,5 +35,4 @@ def note_detail(request, pk, tag_slug=None):
     if tag_slug:
         tag = get_object_or_404(Tag, slug=tag_slug)
         similar_note = Note.objects.all().filter(tags__in=[tag]).exclude(pk=pk)
-    
     return render(request, 'notes/note_detail.html', {'note': note, 'similar_note':similar_note, 'tag_slug':tag_slug})

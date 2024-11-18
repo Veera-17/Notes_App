@@ -5,7 +5,7 @@
         {% for note in similar_note %}
             <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow">
                 <h4 class="text-xl font-semibold text-blue-600 mb-4">
-                    <a href={% url 'note:note_detail' note.id%}>{{ note.title }}</a>
+                    <a href={% url 'note_detail' note.id%}>{{ note.title }}</a>
                 </h4>
                 <p class="text-lg mb-2 text-gray-700"><strong>Author:</strong> {{ note.author.username }}</p>
                 <p class="text-lg mb-2 text-gray-700"><strong>Notebook:</strong> {{ note.notebook.title }}</p>
