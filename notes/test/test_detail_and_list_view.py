@@ -5,14 +5,19 @@ from notes.models import Notebook, Note
 from taggit.models import Tag
 
 class NotebookViewTests(TestCase):
+    
     def setUp(self):
+        """Setup test user and notebooks"""
         self.user = User.objects.create_user(username='testuser', password='password')
         self.notebook1 = Notebook.objects.create(author=self.user, title='Notebook 1', slug='notebook-1')
         self.notebook2 = Notebook.objects.create(author=self.user, title='Notebook 2', slug='notebook-2')
 
     def test_notebook_list_view(self):
-        """Test the NotebookListView returns the correct context"""
+        """Test the NotebookListView returns the correct context and requires login"""
         url = reverse('notebook_list')
+        response = self.client.get(url)
+        self.assertRedirects(response, '/account/login/?next=' + url)
+        self.client.login(username='testuser', password='password')
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'notes/notebook_list.html')
@@ -22,6 +27,7 @@ class NotebookViewTests(TestCase):
 class NoteViewTests(TestCase):
     
     def setUp(self):
+        """Setup test user, notebooks, notes, and tags"""
         self.user = User.objects.create_user(username='testuser', password='password')
         self.notebook1 = Notebook.objects.create(author=self.user, title='Notebook 1', slug='notebook-1')
         self.notebook2 = Notebook.objects.create(author=self.user, title='Notebook 2', slug='notebook-2')
@@ -42,10 +48,13 @@ class NoteViewTests(TestCase):
         self.tag = Tag.objects.create(name='Tag1')
         self.note1.tags.add(self.tag)
         self.note2.tags.add(self.tag)
-
+        
     def test_note_list_view(self):
         """Test that notes are listed correctly on the note list page"""
         url = reverse('note_list')
+        response = self.client.get(url)
+        self.assertRedirects(response, '/account/login/?next=' + url)
+        self.client.login(username='testuser', password='password')
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'notes/note_list.html')
@@ -56,6 +65,9 @@ class NoteViewTests(TestCase):
         """Test that notes are filtered by notebook"""
         url = reverse('note_list_filtered', args=[self.notebook1.pk])
         response = self.client.get(url)
+        self.assertRedirects(response, '/account/login/?next=' + url)
+        self.client.login(username='testuser', password='password')
+        response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'notes/note_list.html')
         self.assertIn(self.note1.title, str(response.content))
@@ -64,6 +76,9 @@ class NoteViewTests(TestCase):
     def test_note_detail_view(self):
         """Test that note detail page renders correctly"""
         url = reverse('note_detail', args=[self.note1.pk])
+        response = self.client.get(url)
+        self.assertRedirects(response, '/account/login/?next=' + url)
+        self.client.login(username='testuser', password='password')
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'notes/note_detail.html')
@@ -74,15 +89,18 @@ class NoteViewTests(TestCase):
         """Test that note detail page shows similar notes when tag is present"""
         url = reverse('similar_note', args=[self.note1.pk, self.tag.slug])
         response = self.client.get(url)
+        self.assertRedirects(response, '/account/login/?next=' + url)
+        self.client.login(username='testuser', password='password')
+        response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'notes/note_detail.html')
         self.assertIn(self.note1.title, str(response.content))
-        self.assertIn(self.note2.title, str(response.content)) 
-
+        self.assertIn(self.note2.title, str(response.content))
 
 class NoteTagViewTests(TestCase):
     
     def setUp(self):
+        """Setup test user, notebooks, notes, tags, and login"""
         self.user = User.objects.create_user(username='testuser', password='password')
         self.notebook1 = Notebook.objects.create(author=self.user, title='Notebook 1', slug='notebook-1')
         self.notebook2 = Notebook.objects.create(author=self.user, title='Notebook 2', slug='notebook-2')
@@ -121,7 +139,7 @@ class NoteTagViewTests(TestCase):
         self.assertTemplateUsed(response, 'notes/note_list.html')
         self.assertIn(self.note1.title, str(response.content))
         self.assertIn(self.note2.title, str(response.content))
-    
+
     def test_note_detail_view_with_tag(self):
         """Test that the note detail page shows similar notes based on the tag"""
         self.note1.tags.add(self.tag1)
