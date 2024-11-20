@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load custom_filters %}
 
 {% block title %}Notes for {{ notebook.title }}{% endblock %}
 
@@ -9,12 +10,19 @@
             <span> {% if notebook %} Notes of {{ notebook.title }}{% endif %} </span>
         </h2>
         <div class="bg-blue-100 text-blue-800 font-semibold px-4 py-2 rounded-lg shadow-md">
-            Total Notes: {{ notes|length }}
+            Total Notes: {{ notes_count }}
         </div>
     </div>
-    <a href="#" class="bg-green-500 text-white px-4 py-3 rounded hover:bg-green-600 transition">
-        + New Note
-    </a>
+    <div class="flex space-x-4">
+        {% if notebook %}
+            <button type="button" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition" onclick="openDeleteModal({{ notebook.pk }}, '{{ notebook.title }}', 'notebook')">
+                Delete Notebook
+            </button>
+        {% endif %}
+        <a href="{% url 'note_create' %}" class="bg-green-500 text-white px-4 py-3 rounded hover:bg-green-600 transition">
+            + New Note
+        </a>
+    </div>
 </div>
 {% if notes %}
     <div class="space-y-8">
@@ -28,7 +36,7 @@
                     <p class="text-gray-500 text-sm mb-4"><strong>Last Modified:</strong> {{ note.modified }}</p>
                 </div>
                 
-                <p class="text-gray-700 mb-4"><strong>Content:</strong> {{ note.content|truncatewords:40 }}</p>
+                <p class="text-gray-700 mb-4"><strong>Content:</strong> {{ note.content|strip_tags_and_truncate:50}}</p>
                 
                 {% if note.tags.all %}
                     <div class="mb-4">
@@ -48,24 +56,26 @@
                         </button>
                     </a>
                     <div class="flex space-x-3">
-                        <a href="#">
-                            <button class="bg-blue-600 text-white px-5 py-2 rounded-md hover:bg-yellow-600 transition duration-300">
+                        <a href="{% url 'note_update' note.pk %}">
+                            <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">
                                 Edit
                             </button>
                         </a>
-                        <form action="#" method="post" class="inline-block">
-                            {% csrf_token %}
-                            <button type="submit" class="bg-red-500 text-white px-5 py-2 rounded-md hover:bg-red-600 transition duration-300">
-                                Delete
-                            </button>
-                        </form>
+                        <button type="button" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition" onclick="openDeleteModal({{ note.pk }}, '{{ note.title }}', 'note')">
+                            Delete
+                        </button>
                     </div>
                 </div>
             </div>
-        {% endfor %}
+            {% endfor %}
+            {% include 'includes/pagination.html' with page_obj=notes %}
     </div>
 {% else %}
     <p class="text-gray-600">No notes available for this notebook.</p>
 {% endif %}
-
+{% include 'includes/delete_model.html' %}
+{% block script %}
+    {% load static %}
+    <script src="{% static 'notes/js/delete.js' %}"></script>
+{% endblock %}
 {% endblock %}

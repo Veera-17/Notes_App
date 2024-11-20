@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
-
-{% block title %}Note Detail{% endblock %}
+{% block title %}{{ note.title }}{% endblock %}
 
 {% block content %}
     <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-lg mt-6 transition-transform transform  hover:shadow-2xl" style="transition-duration: .35s;">
@@ -13,7 +12,9 @@
         <hr class="my-6 border-gray-300">
 
         <h3 class="text-2xl font-semibold mb-4 text-gray-800">Content</h3>
-        <p class="text-lg text-gray-700">{{ note.content }}</p>
+        <div class="markdown-content text-lg text-gray-700">
+            {{ note.get_message_as_markdown|safe }}
+        </div>
         <h3 class="text-2xl font-semibold mt-6 mb-4 text-gray-800">Tags</h3>
         
         {% if note.tags.all %}
@@ -38,17 +39,14 @@
             </a> 
 
             <div class="flex space-x-4">
-                <a href="#">
+                <a href="{% url 'note_update' note.id %}">
                     <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">
                         Edit
                     </button>
                 </a>
-                <form action="#" method="post" class="inline-block">
-                    {% csrf_token %}
-                    <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition">
-                        Delete
-                    </button>
-                </form>
+                <button type="button" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition" onclick="openDeleteModal({{ note.pk }}, '{{ note.title }}', 'note')">
+                    Delete
+                </button>
             </div>
         </div>
     </div>
@@ -59,5 +57,11 @@
         {% else %}
             <p class="text-gray-600 mt-8">No similar notes available for this tag.</p>
         {% endif %}
+        {% include 'includes/pagination.html' with page_obj=similar_note %}
     {% endif %}
+    {% include 'includes/delete_model.html' %}
+    {% block script %}
+        {% load static %}
+        <script src="{% static 'notes/js/delete.js' %}"></script>
+    {% endblock %}
 {% endblock %}

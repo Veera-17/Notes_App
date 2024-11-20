@@ -57,3 +57,11 @@ class Note(TimeStampedModel):
         if self.notebook is None:
             self.notebook = get_default_notebook(self.author)
         super().save(*args, **kwargs)
+        if self.notebook:
+            self.notebook.save(update_fields=['modified'])
+
+    def delete(self, *args, **kwargs):
+        notebook = self.notebook 
+        super().delete(*args, **kwargs)
+        if notebook:
+            notebook.save(update_fields=['modified'])

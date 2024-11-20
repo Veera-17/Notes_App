@@ -5,11 +5,15 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{% block title %}My Django Site{% endblock %}</title>
         <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="https://unpkg.com/trix@2.0.8/dist/trix.css">
+        <script type="text/javascript" src="https://unpkg.com/trix@2.0.8/dist/trix.umd.min.js"></script>
+        {% load static %}
+        <link rel="stylesheet" type="text/css" href="{% static 'notes/css/markdown.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'notes/css/trix.css' %}">
     </head>
-
 <body class="bg-gray-100 bg-gray-100 flex flex-col min-h-screen">
     {% block nav %}
-    <nav class="bg-blue-400 border-b border-blue-400 p-2">
+    <nav class="sticky top-0 bg-blue-400 border-b border-blue-400 p-2 z-10">
         <div class="container w-11/12 mx-auto flex items-center justify-between">
             <div class="w-3/12 flex items-center justify-between">
                 <a href="{% url 'home' %}" class="text-white text-xl font-bold hover:text-blue-200 transition duration-300 {% if request.path == '/' %}border-b-2 border-slate-300{% endif %}">Home</a>

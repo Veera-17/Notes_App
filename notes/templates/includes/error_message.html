@@ -1,0 +1,7 @@
+<div class="mb-4">
+    {% for message in messages %}
+        <div class="p-4 mb-4 rounded {{ message.tags }} bg-yellow-100 text-yellow-700 border-l-4 border-yellow-500">
+            {{ message }}
+        </div>
+    {% endfor %}
+</div>
