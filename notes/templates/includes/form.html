@@ -1,0 +1,38 @@
+{% load widget_tweaks %}
+{% load form_tags %}
+
+{% if form.non_field_errors %}
+  <div class="bg-red-500 text-white p-4 rounded-lg mb-4" role="alert">
+    {% for error in form.non_field_errors %}
+      <p{% if forloop.last %} class="mb-0"{% endif %}>{{ error }}</p>
+    {% endfor %}
+  </div>
+{% endif %}
+
+{% for field in form %}
+  <div class="mb-4">
+    <!-- Make label text bolder -->
+    <label class="font-medium">{{ field.label_tag }}</label>
+
+    {% if form.is_bound %}
+      {% if field.errors %}
+        {% render_field field class="border border-black rounded p-2 w-full " %}
+        {% for error in field.errors %}
+          <div class="text-red-500 text-xs mt-1">
+            {{ error }}
+          </div>
+        {% endfor %}
+      {% else %}
+        {% render_field field class="border border-black rounded p-2 w-full " %}
+      {% endif %}
+    {% else %}
+      {% render_field field class="border border-black rounded p-2 w-full " %}
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="text-gray-600 text-xs">
+        {{ field.help_text|safe }}
+      </small>
+    {% endif %}
+  </div>
+{% endfor %}
