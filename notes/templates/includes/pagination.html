@@ -1,0 +1,17 @@
+<div class="pagination flex justify-center items-center mt-6 space-x-2">
+    <div class="step-links flex space-x-2">
+        {% if page_obj.has_previous %}
+            <a href="?page=1" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition duration-200">&laquo; First</a>
+            <a href="?page={{ page_obj.previous_page_number }}" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition duration-200">Previous</a>
+        {% endif %}
+
+        <span class="current px-4 py-2 bg-blue-500 text-white font-bold rounded-md">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition duration-200">Next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition duration-200">Last &raquo;</a>
+        {% endif %}
+    </div>
+</div>

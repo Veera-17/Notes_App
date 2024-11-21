@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% load widget_tweaks %}
+
+{% block content %}
+    <section class="py-16">
+        <div class="container mx-auto text-center">
+            <h1 class="text-4xl font-semibold text-gray-800 mb-8">Edit Note</h1>
+
+            {% if messages %}
+                {% include 'includes/error_message.html' %}
+            {% endif %}
+
+            <div class="max-w-lg mx-auto bg-white p-8 rounded-lg shadow-lg">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="space-y-6">
+                        <!-- Title -->
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="{{ form.title.id_for_label }}">
+                                {{ form.title.label }}
+                            </label>
+
+                            {% if form.title.errors %}
+                                {% render_field form.title class="border border-red-500 rounded p-2 w-full is-invalid" %}
+                                <div class="text-red-500 text-xs italic mt-1">
+                                    {% for error in form.title.errors %}
+                                        <p>{{ error }}</p>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {% render_field form.title class="border border-gray-300 rounded p-2 w-full" %}
+                            {% endif %}
+                        </div>
+
+                        <!-- Content (Trix Editor) -->
+                        <div class="mb-4">
+                            <label for="content" class="block text-gray-700 text-sm font-bold mb-2">Content</label>
+                            <input id="content" type="hidden" name="content" value="{{ form.content.value|escape }}">
+                            <trix-editor input="content" class="trix-content focus:outline-none focus:ring-2 focus:ring-blue-500"></trix-editor>
+                            <div class="text-red-500 text-xs italic mt-1">
+                                <!-- Display any error message here -->
+                            </div>
+                        </div>
+
+                        <!-- Notebook Selection -->
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="{{ form.notebook.id_for_label }}">
+                                {{ form.notebook.label }}
+                            </label>
+
+                            {% if form.notebook.errors %}
+                                {% render_field form.notebook class="border border-red-500 rounded p-2 w-full is-invalid" %}
+                                <div class="text-red-500 text-xs italic mt-1">
+                                    {% for error in form.notebook.errors %}
+                                        <p>{{ error }}</p>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {% render_field form.notebook class="border border-gray-300 rounded p-2 w-full" %}
+                            {% endif %}
+                        </div>
+
+                        <!-- Tags -->
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="{{ form.tags.id_for_label }}">
+                                {{ form.tags.label }}
+                            </label>
+
+                            {% if form.tags.errors %}
+                                {% render_field form.tags class="border border-red-500 rounded p-2 w-full is-invalid" %}
+                                <div class="text-red-500 text-xs italic mt-1">
+                                    {% for error in form.tags.errors %}
+                                        <p>{{ error }}</p>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {% render_field form.tags class="border border-gray-300 rounded p-2 w-full" %}
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="w-full mt-5 py-3 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition duration-300">
+                        Save changes
+                    </button>
+                </form>
+            </div>
+
+            <div class="mt-6 text-gray-700">
+                <a href="{% url 'note_detail' pk=note.pk %}" class="text-blue-500 hover:text-blue-600 transition duration-300">Cancel</a>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block script %}
+    <script>
+        document.addEventListener('trix-initialize', function (event) {
+            const toolbar = event.target.toolbarElement;
+            const attachmentButton = toolbar.querySelector('button.trix-button--icon-attach');
+            if (attachmentButton) {
+                attachmentButton.style.display = 'none';
+            }
+        });
+    </script>
+{% endblock script %}
