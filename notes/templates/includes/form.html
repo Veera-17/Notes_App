@@ -10,22 +10,22 @@
 {% endif %}
 
 {% for field in form %}
-  <div class="mb-4">
-    <label class="font-medium">{{ field.label_tag }}</label>
+  <div class="mb-4 text-left">
+    <label class="font-medium block">{{ field.label_tag }}</label>
 
     {% if form.is_bound %}
       {% if field.errors %}
-        {% render_field field class="border border-black rounded p-2 w-full " %}
+        {% render_field field class="border border-black rounded p-2 w-full" %}
         {% for error in field.errors %}
           <div class="text-red-500 text-xs mt-1">
             {{ error }}
           </div>
         {% endfor %}
       {% else %}
-        {% render_field field class="border border-black rounded p-2 w-full " %}
+        {% render_field field class="border border-black rounded p-2 w-full" %}
       {% endif %}
     {% else %}
-      {% render_field field class="border border-black rounded p-2 w-full " %}
+      {% render_field field class="border border-black rounded p-2 w-full" %}
     {% endif %}
 
     {% if field.help_text %}
