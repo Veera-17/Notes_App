@@ -9,21 +9,6 @@ class NoteFilter(django_filters.FilterSet):
         empty_label="All Notebooks"
     )
     tags = django_filters.CharFilter(method='filter_tags')
-    sort_by_created = django_filters.ChoiceFilter(
-        label='Sort by Created Time',
-        choices=[('created', 'Old to First'), ('-created', 'First to Old')],
-        method='filter_sort_by_created'
-    )
-    sort_by_modified = django_filters.ChoiceFilter(
-        label='Sort by Modified Time',
-        choices=[('modified', 'Old to First'), ('-modified', 'First to Old')],
-        method='filter_sort_by_modified'
-    )
-    sort_by_title = django_filters.ChoiceFilter(
-        label='Sort by Title',
-        choices=[('title', 'A to Z'), ('-title', 'Z to A')],
-        method='filter_sort_by_title'
-    )
     created_after = django_filters.DateFilter(
         field_name='created',
         lookup_expr='gte',
@@ -48,10 +33,21 @@ class NoteFilter(django_filters.FilterSet):
         label='Modified Before',
         widget=forms.DateInput(attrs={'type': 'date'})
     )
+    order_by = django_filters.OrderingFilter(
+        label='Sort by',
+        choices=[
+            ('created', 'Created Time (Old to New)'),
+            ('-created', 'Created Time (New to Old)'),
+            ('modified', 'Modified Time (Old to New)'),
+            ('-modified', 'Modified Time (New to Old)'),
+            ('title', 'Title (A to Z)'),
+            ('-title', 'Title (Z to A)'),
+        ]
+    )
 
     class Meta:
         model = Note
-        fields = ['notebook', 'tags', 'sort_by_created', 'sort_by_modified', 'sort_by_title', 'created_after', 'created_before', 'modified_after', 'modified_before']
+        fields = ['notebook', 'tags', 'created_after', 'created_before', 'modified_after', 'modified_before', 'order_by']
 
     def __init__(self, data=None, queryset=None, *args, **kwargs):
         user = kwargs.pop('user', None) 
@@ -61,18 +57,6 @@ class NoteFilter(django_filters.FilterSet):
             del self.filters['notebook']
         if user and 'notebook' in self.filters:
             self.filters['notebook'].queryset = Notebook.objects.filter(author=user)
-
-    def filter_sort_by_created(self, queryset, name, value):
-        """Custom method to sort by created time."""
-        return queryset.order_by(value)
-
-    def filter_sort_by_modified(self, queryset, name, value):
-        """Custom method to sort by modified time."""
-        return queryset.order_by(value)
-
-    def filter_sort_by_title(self, queryset, name, value):
-        """Custom method to sort by title."""
-        return queryset.order_by(value)
 
     def filter_tags(self, queryset, name, value):
         """Custom method to filter tags by title or slug."""
@@ -89,24 +73,6 @@ class NoteFilter(django_filters.FilterSet):
 
 class NotebookFilter(django_filters.FilterSet):
     title = django_filters.CharFilter(lookup_expr='icontains', label='Search by Title')
-    
-    sort_by_created = django_filters.ChoiceFilter(
-        label='Sort by Created Time',
-        choices=[('created', 'Old to First'), ('-created', 'First to Old')],
-        method='filter_sort_by_created'
-    )
-    sort_by_modified = django_filters.ChoiceFilter(
-        label='Sort by Modified Time',
-        choices=[('modified', 'Old to First'), ('-modified', 'First to Old')],
-        method='filter_sort_by_modified'
-    )
-    sort_by_title = django_filters.ChoiceFilter(
-        label='Sort by Title',
-        choices=[('title', 'A to Z'), ('-title', 'Z to A')],
-        method='filter_sort_by_title'
-    )
-    
-    # New filters for created date
     created_after = django_filters.DateFilter(
         field_name='created',
         lookup_expr='gte',
@@ -119,8 +85,6 @@ class NotebookFilter(django_filters.FilterSet):
         label='Created Before',
         widget=forms.DateInput(attrs={'type': 'date'})
     )
-
-    # New filters for modified date
     modified_after = django_filters.DateFilter(
         field_name='modified',
         lookup_expr='gte',
@@ -133,19 +97,18 @@ class NotebookFilter(django_filters.FilterSet):
         label='Modified Before',
         widget=forms.DateInput(attrs={'type': 'date'})
     )
+    order_by = django_filters.OrderingFilter(
+        label='Sort by',
+        choices=[
+            ('created', 'Created Time (Old to New)'),
+            ('-created', 'Created Time (New to Old)'),
+            ('modified', 'Modified Time (Old to New)'),
+            ('-modified', 'Modified Time (New to Old)'),
+            ('title', 'Title (A to Z)'),
+            ('-title', 'Title (Z to A)'),
+        ]
+    )
 
     class Meta:
         model = Notebook
-        fields = ['title', 'sort_by_created', 'sort_by_modified', 'sort_by_title', 'created_after', 'created_before', 'modified_after', 'modified_before']
-
-    def filter_sort_by_created(self, queryset, name, value):
-        """Custom method to sort by created time."""
-        return queryset.order_by(value)
-
-    def filter_sort_by_modified(self, queryset, name, value):
-        """Custom method to sort by modified time."""
-        return queryset.order_by(value)
-
-    def filter_sort_by_title(self, queryset, name, value):
-        """Custom method to sort by title."""
-        return queryset.order_by(value)
+        fields = ['title', 'created_after', 'created_before', 'modified_after', 'modified_before', 'order_by']
