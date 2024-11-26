@@ -1,7 +1,5 @@
 {% extends 'base.html' %}
-
 {% block title %}Welcome to Notes Keeper{% endblock %}
-
 {% block content %}
 <div class="py-16 px-6 md:px-20 text-center">
   <h1 class="text-5xl font-semibold text-gray-800 mb-6">Welcome to Notes Keeper</h1>
@@ -14,7 +12,7 @@
   </div>
 
   <div>
-    <a href="#" class="inline-block bg-blue-500 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:bg-blue-600 transition duration-200">Start Your First Note</a>
+    <a href="{% url 'note_create' %}" class="inline-block bg-blue-500 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:bg-blue-600 transition duration-200">Start Your First Note</a>
   </div>
 </div>
 
@@ -88,7 +86,7 @@
   </div>
 
   <div class="mt-10">
-    <a href="#" class="inline-block bg-blue-500 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:bg-blue-600 transition duration-200">Start Your First Notebook</a>
+    <a href="{% url 'notebook_create' %}" class="inline-block bg-blue-500 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:bg-blue-600 transition duration-200">Start Your First Notebook</a>
   </div>
 </div>
 

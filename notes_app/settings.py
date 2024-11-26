@@ -133,7 +133,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = 'notebook_list'
 LOGOUT_REDIRECT_URL = 'home'
 LOGIN_URL = 'login'
-PASSWORD_CHANGE_REDIRECT_URL = 'home'
+PASSWORD_CHANGE_REDIRECT_URL = 'login'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = config('EMAIL_HOST') 

@@ -13,7 +13,7 @@
             Total Notebooks: {{ notebook|length }}
         </div>
     </div>
-    <a href="#" class="bg-green-500 text-white px-4 py-3 rounded hover:bg-green-600 transition">
+    <a href="{% url 'notebook_create' %}" class="bg-green-500 text-white px-4 py-3 rounded hover:bg-green-600 transition">
         + New Notebook
     </a>
 </div>
@@ -36,29 +36,27 @@
                     </a> 
                     <div class="flex space-x-4">
                         {% if item.slug != 'uncategorized' %}
-                            <form action="#" method="post">
-                                {% csrf_token %}
-                                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">
-                                    Edit
-                                </button>
-                            </form>
+                        <a href="{% url 'notebook_update' pk=item.pk %}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">
+                            Edit
+                        </a>
                         {% endif %}
                 
-                        <form action="#" method="post" class="inline-block">
-                            {% csrf_token %}
-                            <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition">
-                                Delete
-                            </button>
-                        </form>
+                        <button type="button" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition" onclick="openDeleteModal({{ item.pk }}, '{{ item.title }}', 'notebook')">
+                            Delete
+                        </button>
                 
                     </div>
                 </div>
-                
             </div>
         {% endfor %}
     </div>
+    {% include 'includes/delete_model.html' %}
+    {% include 'includes/pagination.html' %}
 {% else %}
     <p class="text-gray-600">No notebooks available.</p>
 {% endif %}
-
+{% block script %}
+    {% load static %}
+    <script src="{% static 'notes/js/delete.js' %}"></script>
+{% endblock %}
 {% endblock %}
