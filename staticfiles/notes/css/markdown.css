@@ -1,0 +1,144 @@
+.markdown-content {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.75; 
+    color: #333; 
+}
+
+.markdown-content h1,
+.markdown-content h2,
+.markdown-content h3,
+.markdown-content h4,
+.markdown-content h5,
+.markdown-content h6 {
+    color: #1a202c; 
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+.markdown-content h1 {
+    font-size: 2.25rem; 
+    font-weight: 700;
+}
+
+.markdown-content h2 {
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+.markdown-content h3 {
+    font-size: 1.75rem; 
+    font-weight: 600;
+}
+
+.markdown-content h4 {
+    font-size: 1.5rem; 
+    font-weight: 600;
+}
+
+.markdown-content h5 {
+    font-size: 1.25rem; 
+    font-weight: 500;
+}
+
+.markdown-content h6 {
+    font-size: 1.125rem;
+    font-weight: 500;
+}
+
+.markdown-content p {
+    margin-bottom: 1.25rem;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.markdown-content a {
+    color: #3182ce; 
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.markdown-content a:hover {
+    color: #2b6cb0; 
+    text-decoration: underline;
+}
+
+.markdown-content ul {
+    list-style-type: disc;
+    margin-left: 1.5rem;
+    margin-bottom: 1.25rem;
+}
+
+.markdown-content ol {
+    list-style-type: decimal;
+    margin-left: 1.5rem;
+    margin-bottom: 1.25rem;
+}
+
+.markdown-content blockquote {
+    background-color: #f7fafc; 
+    border-left: 4px solid #cbd5e0; 
+    padding-left: 1rem;
+    margin: 1.25rem 0;
+    font-style: italic;
+}
+
+.markdown-content pre {
+    background-color: #f7fafc; 
+    border-radius: 5px;
+    padding: 1rem;
+    overflow-x: auto;
+    margin-bottom: 1.25rem;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.markdown-content code {
+    background-color: #f7fafc; 
+    padding: 0.25rem 0.5rem;
+    border-radius: 3px;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.markdown-content img {
+    max-width: 100%;
+    height: auto;
+    margin-top: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.markdown-content hr {
+    border: 1px solid #e2e8f0; 
+    margin: 2rem 0;
+}
+
+.markdown-content table {
+    width: 100%;
+    margin-bottom: 1.25rem;
+    border-collapse: collapse;
+}
+
+.markdown-content th,
+.markdown-content td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.markdown-content th {
+    background-color: #edf2f7;
+    font-weight: 600;
+}
+
+.markdown-content td {
+    background-color: #ffffff;
+}
+
+.markdown-content small {
+    font-size: 0.875rem; 
+    color: #4a5568; 
+}            
+
+.markdown-content img {
+    width: 150px;
+    height: 150px;
+}
