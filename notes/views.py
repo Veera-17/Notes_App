@@ -10,6 +10,7 @@ from django.utils.text import slugify
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from .filters import NoteFilter, NotebookFilter
 
 
 def slug_convertor(field):
@@ -20,12 +21,20 @@ def landing_page(request):
 
 class NotebookListView(LoginRequiredMixin, ListView):
     model = Notebook
-    context_object_name = 'notebook'
+    context_object_name = 'notebooks'
     template_name = 'notes/notebook_list.html'
-    paginate_by = 3
+    paginate_by = 5
 
     def get_queryset(self):
-        return Notebook.objects.filter(author=self.request.user).order_by('-modified')
+        queryset = Notebook.objects.filter(author=self.request.user)
+        notebook_filter = NotebookFilter(self.request.GET, queryset=queryset)
+        return notebook_filter.qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['notebook_count'] = self.get_queryset().count()
+        context['filter'] = NotebookFilter(self.request.GET, queryset=self.get_queryset())
+        return context
 
 @login_required
 def note_list_view(request, pk=None):
@@ -35,10 +44,10 @@ def note_list_view(request, pk=None):
     else:
         notebook = None
         notes = Note.objects.filter(author=request.user).order_by('-modified')
-
-    paginator = Paginator(notes, 5)
+    note_filter = NoteFilter(request.GET, queryset=notes, user=request.user, pk=pk)
+    filtered_notes = note_filter.qs  
+    paginator = Paginator(filtered_notes, 3)
     page_number = request.GET.get('page')
-    notes_count = notes.count()
     try:
         paginated_notes = paginator.page(page_number)
     except PageNotAnInteger:
@@ -48,7 +57,8 @@ def note_list_view(request, pk=None):
     context = {
         'notes': paginated_notes,
         'notebook': notebook,
-        'notes_count':notes_count
+        'notes_count': filtered_notes.count(),
+        'note_filter': note_filter,
     }
     return render(request, 'notes/note_list.html', context)
     
