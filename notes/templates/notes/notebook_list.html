@@ -17,55 +17,53 @@
         + New Notebook
     </a>
 </div>
-<form method="get" class="space-x-4 flex items-center flex-wrap mb-6 shadow-md hover:shadow-lg transition-shadow rounded-lg p-4 bg-white">
+<form method="get" class="space-x-4 flex items-center flex-wrap mb-10 shadow-md hover:shadow-lg transition-shadow rounded-lg p-6 bg-white ">
     {% for field in filter.form %}
-        <div class="flex items-center space-x-2 mb-2">
-            <label for="{{ field.id_for_label }}" class="text-sm text-gray-700">{{ field.label }}</label>
-            <div class="flex items-center border rounded-md p-2">
+        <div class="flex items-center space-x-2 mb-2 py-1">
+            <label for="{{ field.id_for_label }}" class="text-base text-gray-700">{{ field.label }}</label>
+            <div class="flex items-center border border-gray-300 rounded text-base">
                 {{ field }}
             </div>
         </div>
     {% endfor %}
     <div class="flex items-center space-x-2">
         <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md flex items-center space-x-2 hover:bg-blue-600 transition">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6M10 17a7 7 0 111-14 7 7 0 010 14z" />
-            </svg>           
-            <span class="text-xs">Apply Filters</span>
+            <i class="fas fa-filter mr-2 text-sm"></i> Apply Filters
         </button>
     </div>
 </form>
-{% if notebooks %}
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {% for item in notebooks %}
-            <div class="border rounded-lg shadow-lg p-6 transition-transform transform hover:scale-105 hover:shadow-2xl" style="transition-duration: .35s;">
-                <h3 class="text-xl font-bold mb-2 text-blue-600">{{ item.title }}</h3>
-                <p class="text-gray-700 mb-1"><strong>Author:</strong> {{ item.author.username }}</p>
-                <p class="text-gray-700 mb-1"><strong>No. of Notes:</strong> {{ item.notes.count }}</p>
-                <p class="text-gray-500 mb-1"><strong>Created:</strong> {{ item.created }}</p>
-                <p class="text-gray-500"><strong>Last Modified:</strong> {{ item.modified }}</p>
 
-                <div class="mt-4 border-t pt-4 flex justify-between">
-                    <a href="{% url 'note_list_filtered' item.pk %}">
-                        <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">
-                            View Notes
-                        </button>
-                    </a> 
-                    <div class="flex space-x-4">
-                        {% if item.slug != 'uncategorized' %}
-                            <a href="{% url 'notebook_update' pk=item.pk %}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">
-                                Edit
-                            </a>
-                        {% endif %}
-                        <button type="button" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition" onclick="openDeleteModal({{ item.pk }}, '{{ item.title }}', 'notebook')">
-                            Delete
-                        </button>
-                    </div>
+{% if notebooks %}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+        {% for item in notebooks %}
+        <div class="border rounded-lg shadow-lg p-6 transition-transform transform hover:scale-105 hover:shadow-2xl my-3" style="transition-duration: .35s;">
+            <h3 class="text-xl font-bold mb-2 text-blue-600">{{ item.title }}</h3>
+            <p class="text-gray-700 mb-1"><strong>Author:</strong> {{ item.author.username }}</p>
+            <p class="text-gray-700 mb-1"><strong>No. of Notes:</strong> {{ item.notes.count }}</p>
+            <p class="text-gray-500 mb-1"><strong>Created:</strong> {{ item.created }}</p>
+            <p class="text-gray-500"><strong>Last Modified:</strong> {{ item.modified }}</p>
+        
+            <div class="mt-4 border-t pt-4 flex justify-between">
+                <a href="{% url 'note_list_filtered' item.pk %}">
+                    <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">
+                        View Notes
+                    </button>
+                </a>
+                <div class="flex space-x-4">
+                    {% if item.slug != 'uncategorized' %}
+                        <a href="{% url 'notebook_update' pk=item.pk %}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">
+                            Edit
+                        </a>
+                    {% endif %}
+                    <button type="button" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition" onclick="openDeleteModal({{ item.pk }}, '{{ item.title }}', 'notebook')">
+                        Delete
+                    </button>
                 </div>
             </div>
+        </div>
+        
         {% endfor %}
-    </div>
-    {% include 'includes/pagination.html' %}
+    </div>    {% include 'includes/pagination.html' %}
     {% include 'includes/delete_model.html' %}
 {% else %}
     <p class="text-gray-600">No notebooks available.</p>

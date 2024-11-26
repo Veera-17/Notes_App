@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
-
 {% load widget_tweaks %}
-
+{% block title %}Update-Note{% endblock %}
 {% block content %}
     <section class="py-16">
         <div class="container mx-auto text-center">
@@ -11,13 +10,13 @@
                 {% include 'includes/error_message.html' %}
             {% endif %}
 
-            <div class="max-w-lg mx-auto bg-white p-8 rounded-lg shadow-lg">
+            <div class="w-5/12 mx-auto bg-white p-8 rounded-lg shadow-lg ">
                 <form method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="space-y-6">
 
                         <div class="mb-4">
-                            <label class="block text-gray-700 text-sm font-bold mb-2" for="{{ form.title.id_for_label }}">
+                            <label class="block text-gray-700 text-sm font-bold mb-2 text-left" for="{{ form.title.id_for_label }}">
                                 {{ form.title.label }}
                             </label>
                             {% if form.title.errors %}
@@ -33,7 +32,7 @@
                         </div>
 
                         <div class="mb-4">
-                            <label for="content" class="block text-gray-700 text-sm font-bold mb-2">Content</label>
+                            <label for="content" class="block text-gray-700 text-sm font-bold mb-2 text-left">Content</label>
                             <input id="content" type="hidden" name="content">
                             <trix-editor input="content" class="trix-content focus:outline-none focus:ring-2 focus:ring-blue-500"></trix-editor>
                             <div class="text-red-500 text-xs italic mt-1">
@@ -41,7 +40,7 @@
                         </div>
 
                         <div class="mb-4">
-                            <label class="block text-gray-700 text-sm font-bold mb-2" for="{{ form.notebook.id_for_label }}">
+                            <label class="block text-gray-700 text-sm font-bold mb-2 text-left" for="{{ form.notebook.id_for_label }}">
                                 {{ form.notebook.label }}
                             </label>
 
@@ -58,7 +57,7 @@
                         </div>
 
                         <div class="mb-4">
-                            <label class="block text-gray-700 text-sm font-bold mb-2" for="{{ form.tags.id_for_label }}">
+                            <label class="block text-gray-700 text-sm font-bold mb-2 text-left" for="{{ form.tags.id_for_label }}">
                                 {{ form.tags.label }}
                             </label>
 
@@ -91,12 +90,15 @@
 
 {% block script %}
     <script>
-        document.addEventListener('trix-initialize', function (event) {
-            const toolbar = event.target.toolbarElement;
-            const attachmentButton = toolbar.querySelector('button.trix-button--icon-attach');
-            if (attachmentButton) {
-                attachmentButton.style.display = 'none';
-            }
+        document.addEventListener('DOMContentLoaded', function () {
+            const trixEditors = document.querySelectorAll('trix-editor');
+            trixEditors.forEach(function(editor) {
+                const toolbar = editor.toolbarElement;
+                const attachmentButton = toolbar.querySelector('button.trix-button--icon-attach');
+                if (attachmentButton) {
+                    attachmentButton.style.display = 'none';
+                }
+            });
         });
     </script>
-{% endblock script %}
+{% endblock %}
